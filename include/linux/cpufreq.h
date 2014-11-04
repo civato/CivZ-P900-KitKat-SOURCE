@@ -97,6 +97,10 @@ struct cpufreq_policy {
 	unsigned int		max;    /* in kHz */
 	unsigned int		cur;    /* in kHz, only needed if cpufreq
 					 * governors are used */
+	unsigned int util; /* CPU utilization at max frequency */
+#ifdef CONFIG_SEC_PM
+	unsigned int load_at_max; /* CPU utilization at max frequency */
+#endif
 	unsigned int		policy; /* see above */
 	struct cpufreq_governor	*governor; /* see below */
 
@@ -125,6 +129,8 @@ struct cpufreq_policy {
 #define CPUFREQ_POSTCHANGE	(1)
 #define CPUFREQ_RESUMECHANGE	(8)
 #define CPUFREQ_SUSPENDCHANGE	(9)
+#define FREQ_STEPS_GPU		9
+#define FREQ_STEPS_GPU_MAX	677
 
 struct cpufreq_freqs {
 	unsigned int cpu;	/* cpu nr */
@@ -305,6 +311,13 @@ __ATTR(_name, 0444, show_##_name, NULL)
 static struct global_attr _name =		\
 __ATTR(_name, 0644, show_##_name, store_##_name)
 
+ssize_t store_UV_mV_table(struct cpufreq_policy *policy,
+				 const char *buf, size_t count);
+ssize_t store_UV_uV_table(struct cpufreq_policy *policy,
+				 const char *buf, size_t count);
+
+ssize_t show_UV_mV_table(struct cpufreq_policy *policy, char *buf);
+ssize_t show_UV_uV_table(struct cpufreq_policy *policy, char *buf);
 
 /*********************************************************************
  *                        CPUFREQ 2.6. INTERFACE                     *
